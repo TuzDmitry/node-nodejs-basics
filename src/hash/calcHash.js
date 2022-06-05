@@ -1,4 +1,6 @@
 import {readFile} from "fs/promises";
+import {fileURLToPath} from "url";
+import path from "path";
 
 export const calculateHash = async () => {
     // Write your code here
@@ -8,7 +10,11 @@ export const calculateHash = async () => {
         crypto = await import('crypto');
         const secret = 'secret';
 
-        const content = await readFile('files/fileToCalculateHashFor.txt');
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        const pathToFile = path.join(__dirname, 'files/fileToCalculateHashFor.txt');
+
+        const content = await readFile(pathToFile);
         const hash = crypto
             .createHmac('sha256', secret)
             .update(content.toString())
@@ -20,4 +26,4 @@ export const calculateHash = async () => {
     }
 };
 
-calculateHash();
+calculateHash().then((res)=>console.log(res));
